@@ -1,0 +1,16 @@
+// Type check only (npm run check:server). Node runs the .ts files directly.
+{
+  "compilerOptions": {
+    "target": "ES2024",
+    "module": "nodenext",
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "erasableSyntaxOnly": true,
+    "verbatimModuleSyntax": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "skipLibCheck": true,
+    "types": ["node"]
+  },
+  "include": ["**/*.ts", "../shared/*.ts"]
+}

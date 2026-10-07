@@ -1,0 +1,85 @@
+# kubectl apply -f runner-dashboard.yaml (after filling in the Secret).
+# Add an Ingress for your controller that routes the host to the Service;
+# /api/webhook must be reachable by GitHub.
+#
+# One replica on purpose: the job store lives in memory, and each webhook
+# delivery reaches only one pod.
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: runner-dashboard
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: runner-dashboard
+  namespace: runner-dashboard
+type: Opaque
+stringData:
+  github_token: "github_pat_..."
+  webhook_secret: "<openssl rand -hex 32>"
+  basic_auth_password: "<openssl rand -base64 24>"
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: runner-dashboard
+  namespace: runner-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: runner-dashboard
+  template:
+    metadata:
+      labels:
+        app: runner-dashboard
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000 # "node" in node:24-alpine
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: runner-dashboard
+          image: ghcr.io/volkmann-design-code/runner-dashboard:0.6.0
+          ports:
+            - name: http
+              containerPort: 8080
+          env:
+            - name: GITHUB_ORGS
+              value: my-org
+            - name: BASIC_AUTH_USERNAME
+              value: admin
+            - name: GITHUB_TOKEN
+              valueFrom: { secretKeyRef: { name: runner-dashboard, key: github_token } }
+            - name: GITHUB_WEBHOOK_SECRET
+              valueFrom: { secretKeyRef: { name: runner-dashboard, key: webhook_secret } }
+            - name: BASIC_AUTH_PASSWORD
+              valueFrom: { secretKeyRef: { name: runner-dashboard, key: basic_auth_password } }
+          readinessProbe:
+            httpGet: { path: /healthz, port: http }
+          livenessProbe:
+            httpGet: { path: /healthz, port: http }
+            periodSeconds: 30
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: [ALL]
+          resources:
+            requests: { memory: 64Mi, cpu: 10m }
+            limits: { memory: 128Mi, cpu: 200m }
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: runner-dashboard
+  namespace: runner-dashboard
+spec:
+  selector:
+    app: runner-dashboard
+  ports:
+    - name: http
+      port: 80
+      targetPort: http

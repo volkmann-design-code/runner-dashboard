@@ -1,0 +1,8 @@
+node_modules
+dist
+.angular
+.git
+.github
+examples
+**/*.test.ts
+server/test
