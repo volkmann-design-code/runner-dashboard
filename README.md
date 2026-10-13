@@ -273,7 +273,7 @@ cd .github/screenshot && npm ci && npx playwright install chromium && npm run sc
 ## Releasing
 
 Bump `version` in `package.json`, merge, then tag:
-`git tag v0.6.0 && git push origin v0.6.0`. The release workflow publishes
+`git tag v0.6.1 && git push origin v0.6.1`. The release workflow publishes
 `ghcr.io/volkmann-design-code/runner-dashboard` for amd64 and arm64.
 
 ## Contributing

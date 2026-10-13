@@ -28,7 +28,7 @@ export class PrFocus {
 @Directive({
   selector: '[appPrHighlight]',
   host: {
-    '[class]': 'focused() ? "transition-colors bg-violet-50 dark:bg-violet-950" : "transition-colors"',
+    '[class]': 'focused() ? "transition-colors bg-violet-50 dark:bg-violet-400/10" : "transition-colors"',
     '(mouseenter)': 'key() && focus.key.set(key())',
     '(mouseleave)': 'key() && focus.key.set(null)',
   },
