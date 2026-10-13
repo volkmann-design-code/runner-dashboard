@@ -42,3 +42,6 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# the screenshot tooling (.github/screenshot)
+/.github/screenshot/node_modules/
