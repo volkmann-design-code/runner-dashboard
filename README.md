@@ -6,6 +6,11 @@ job, branch, PR), what is queued, what finished recently, and which PRs are
 open, stacked on top of each other, with their checks. Across several orgs,
 updated within a second, in a single small container with no database.
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/screenshot-dark.png">
+  <img alt="The dashboard: busy/idle/queued/offline counts, a card per runner host (build-1, build-2, mac-mini) with the jobs they run and the time left, queued and recently finished jobs, and a sidebar of open pull requests per repo, stacked as trees with their checks; PR #412 is hovered and its two running jobs are highlighted" src=".github/screenshot.png">
+</picture>
+
 - **Live by webhook.** Job and PR changes reach the browser within a
   fraction of a second to a few seconds of GitHub sending them.
 - **Runners by host.** One card per machine, with its busy and idle
@@ -256,10 +261,19 @@ npm test               # node --test (server and the browser's pure logic)
 Node runs the server's TypeScript directly (type stripping), so there is no
 server build step.
 
+The README's screenshots show the real UI with made-up data
+(`.github/screenshot/data.mjs`), rendered the same on every run (frozen
+clock, pinned Chromium and fonts):
+
+```bash
+npm run build
+cd .github/screenshot && npm ci && npx playwright install chromium && npm run screenshot
+```
+
 ## Releasing
 
 Bump `version` in `package.json`, merge, then tag:
-`git tag v0.6.0 && git push origin v0.6.0`. The release workflow publishes
+`git tag v0.6.1 && git push origin v0.6.1`. The release workflow publishes
 `ghcr.io/volkmann-design-code/runner-dashboard` for amd64 and arm64.
 
 ## Contributing

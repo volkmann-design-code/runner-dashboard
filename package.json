@@ -1,6 +1,6 @@
 {
   "name": "runner-dashboard",
-  "version": "0.6.0",
+  "version": "0.6.1",
   "description": "Live view of self-hosted GitHub Actions runners: which runner runs which job, what is queued, what just finished.",
   "license": "MIT",
   "repository": {
